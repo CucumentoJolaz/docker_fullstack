@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  backend:
+    build: django
+    ports:
+      - '8088:8088'
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+  frontend:
+    build: vue
+#    command: npm run build
+#    volumes:
+#      - .:/app
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+#services:
+#  db:
+#    image: postgres
+#    volumes:
+#      - ./data/db:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_DB=postgres
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+#  django:
+#    build: django
+#    command: python manage.py runserver:8088
+#    volumes:
+#      - .:/app
+#    ports:
+#      - "8088:8000"
+#    environment:
+#      - POSTGRES_NAME=postgres
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+#    depends_on:
+#      - db

@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  backend:
+    build: django
+    volumes:
+      - backend_volume:/app
+    command: gunicorn django_backend.wsgi:application --bind 0.0.0.0:8088
+    ports:
+      - '8088:8088'
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+  frontend:
+    build: vue
+    volumes:
+      - frontend_volume:/app
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  backend_volume:
+  frontend_volume:
