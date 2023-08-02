@@ -13,6 +13,10 @@ let info = ref(null)
 let loading = ref(true)
 let errored = ref(false)
 
+let infoUsers = ref(null)
+let loadingUsers = ref(true)
+let erroredUsers = ref(false)
+
 function initialiseBitcoinData() {
   axios
       .get('https://api.coindesk.com/v1/bpi/currentprice.json')
@@ -25,6 +29,19 @@ function initialiseBitcoinData() {
       })
       .finally(() => (loading.value = false));
 }
+function initialiseUsers() {
+  axios
+      .get('http://localhost:8088/users/?format=json')
+      .then(response => {
+        infoUsers.value = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        erroredUsers.value = true;
+      })
+      .finally(() => (loadingUsers.value = false));
+}
+
 
 function currencyDecimal(value) {
   return value.toFixed(2)
@@ -32,6 +49,7 @@ function currencyDecimal(value) {
 
 onMounted(() => {
   initialiseBitcoinData()
+  initialiseUsers()
 })
 
 </script>
@@ -128,6 +146,25 @@ onMounted(() => {
       <span class="lighten">
         <span v-html="currency.symbol"></span>{{ currencyDecimal(currency.rate_float )}}
       </span>
+    </div>
+  </WelcomeItem>
+
+   <WelcomeItem>
+    <template #icon>
+      <EcosystemIcon/>
+    </template>
+    <template #heading>Custom API test</template>
+    <div v-if="loadingUsers">Loading...</div>
+    <div
+        v-else
+        v-for="user in infoUsers.results"
+        class="user"
+    >
+      {{ user.username }}:
+      <span class="lighten">
+        {{ user.email }}
+      </span>
+      {{ user.groups }}
     </div>
   </WelcomeItem>
 </template>
