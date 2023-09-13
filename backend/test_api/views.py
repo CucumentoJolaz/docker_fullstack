@@ -2,7 +2,8 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
 from test_api.serializers import UserSerializer, GroupSerializer
-
+from django.http import HttpResponse
+import datetime
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -20,3 +21,9 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     #permission_classes = [permissions.IsAuthenticated]
+
+def current_datetime(request):
+    now = datetime.datetime.now()
+    html = "<html><body>It is now %s.</body></html>" % now
+    return HttpResponse(html)
+
