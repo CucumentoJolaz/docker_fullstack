@@ -31,7 +31,7 @@ function initialiseBitcoinData() {
 }
 function initialiseUsers() {
   axios
-      .get('http://localhost:8088/users/?format=json')
+      .get('http://localhost:8090/users/?format=json')
       .then(response => {
         infoUsers.value = response.data;
       })
@@ -153,7 +153,7 @@ onMounted(() => {
     <template #icon>
       <EcosystemIcon/>
     </template>
-    <template #heading>Custom API test</template>
+    <template #heading>Data from Django Rest Framework from python container</template>
     <div v-if="loadingUsers">Loading...</div>
     <div
         v-else
@@ -164,7 +164,6 @@ onMounted(() => {
       <span class="lighten">
         {{ user.email }}
       </span>
-      {{ user.groups }}
     </div>
   </WelcomeItem>
 </template>
